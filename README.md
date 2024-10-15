@@ -130,7 +130,7 @@ if ($paystackService->isValidPaystackWebhook($payload, $signature)) {
 - `enableSubscription(string $subscription_id): bool`
 - `disableSubscription(string $subscription_code): bool`
 - `isValidPaystackWebhook($payload, $signature): bool`
-- `getBankList(): ?Collection`
+- `fetchBanks(): ?Collection`
 - `validateAccountNumber(string $account_number, string $bank_code): bool`
 - `checkPTBalanceIsSufficient(int $amount): bool`
 - `createTransferRecipient($name, $account_number, $bank_code): TransferRecipientDto`
