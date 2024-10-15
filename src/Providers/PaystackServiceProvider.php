@@ -15,36 +15,36 @@ use Intune\LaravelPaystack\PaystackService;
  */
 class PaystackServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the Paystack service in the application container.
-     *
-     * This method merges the package configuration with the application's 
-     * configuration and binds the PaystackService to the service container 
-     * as a singleton.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__ . '/../config/paystack.php', 'paystack');
-        
-        $this->app->singleton(PaystackService::class, function ($app) {
-            return new PaystackService();
-        });
-    }
+   /**
+    * Register the Paystack service in the application container.
+    *
+    * This method merges the package configuration with the application's 
+    * configuration and binds the PaystackService to the service container 
+    * as a singleton.
+    *
+    * @return void
+    */
+   public function register()
+   {
+      $this->mergeConfigFrom(__DIR__ . '/../../config/paystack.php', 'paystack');
 
-    /**
-     * Boot the service provider.
-     *
-     * This method publishes the Paystack configuration file to the 
-     * application's configuration directory.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->publishes([
-            __DIR__ . '/../config/paystack.php' => config_path('paystack.php'),
-        ]);
-    }
+      $this->app->singleton(PaystackService::class, function ($app) {
+         return new PaystackService();
+      });
+   }
+
+   /**
+    * Boot the service provider.
+    *
+    * This method publishes the Paystack configuration file to the 
+    * application's configuration directory.
+    *
+    * @return void
+    */
+   public function boot()
+   {
+      $this->publishes([
+         __DIR__ . '/../../config/paystack.php' => config_path('paystack.php'),
+      ]);
+   }
 }
