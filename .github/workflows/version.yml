@@ -8,7 +8,7 @@ on:
     types: [created]
 
 permissions:
-  contents: write # Allow the workflow to push to the repository
+  contents: write 
 
 jobs:
   version:
@@ -37,6 +37,18 @@ jobs:
           echo "Bumping version to $new_version"
           jq --arg new_version "$new_version" '.version = $new_version' composer.json > temp.json && mv temp.json composer.json
           echo "::set-output name=new_version::$new_version"
+
+      - name: Check for existing tag
+        id: check_tag
+        run: |
+          if git tag -l | grep -q "${{ steps.bump_version.outputs.new_version }}"; then
+            echo "Tag ${{ steps.bump_version.outputs.new_version }} already exists. Incrementing again."
+            IFS='.' read -r major minor patch <<< "${{ steps.bump_version.outputs.new_version }}"
+            new_version="${major}.${minor}.$((patch + 1))"
+            echo "New version after increment: $new_version"
+            jq --arg new_version "$new_version" '.version = $new_version' composer.json > temp.json && mv temp.json composer.json
+            echo "::set-output name=new_version::$new_version"
+          fi
 
       - name: Commit version bump
         run: |
