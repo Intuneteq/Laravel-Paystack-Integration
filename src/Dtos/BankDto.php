@@ -21,7 +21,7 @@ class BankDto implements IDtoFactory
      * @param  string  $name  Bank Name
      * @param  string  $code  Bank Code
      */
-    public function __construct(private string $name, private string $code) {}
+    private function __construct(private string $name, private string $code) {}
 
     /**
      * Get the name.
@@ -55,7 +55,7 @@ class BankDto implements IDtoFactory
      *
      * @param  array  $data  Response data from paystack
      *
-     * @throws ServerErrorException When the bank name and code are not in the array.
+     * @throws DtoCastException When the bank name and code are not in the array.
      */
     public static function create(array $data): self
     {

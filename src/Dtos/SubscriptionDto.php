@@ -28,7 +28,7 @@ class SubscriptionDto implements IDtoFactory
     *
     * @var Collection<int, InvoiceDto> A collection of all the subscription invoices
     */
-   public function __construct(
+   private function __construct(
       private string $id,
       private string $code,
       private int $amount,

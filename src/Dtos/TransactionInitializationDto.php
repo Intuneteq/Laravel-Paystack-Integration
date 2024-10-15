@@ -6,7 +6,7 @@ use Intune\LaravelPaystack\Exceptions\DtoCastException;
 
 class TransactionInitializationDto implements IDtoFactory
 {
-    public function __construct(
+    private function __construct(
         private string $authorization_url,
         private string $access_code,
         private string $reference,
@@ -54,12 +54,12 @@ class TransactionInitializationDto implements IDtoFactory
      *
      * @param  array  $data  The array containing initialization data.
      *
-     * @throws ServerErrorException If required fields are missing in $data.
+     * @throws DtoCastException If required fields are missing in $data.
      */
     public static function create(array $data): self
     {
         if (! isset($data['authorization_url'], $data['access_code'], $data['reference'])) {
-         throw new DtoCastException(self::class);
+            throw new DtoCastException(self::class);
         }
 
         return new self(

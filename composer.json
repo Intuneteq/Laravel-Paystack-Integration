@@ -3,7 +3,7 @@
   "description": "Utility API Layer for Paytstack Integration",
   "type": "library",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "autoload": {
     "psr-4": {
       "Intune\\Paystack\\": "src/"

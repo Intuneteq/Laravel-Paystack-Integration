@@ -5,24 +5,25 @@ namespace Intune\LaravelPaystack\Dtos;
 use Intune\LaravelPaystack\Exceptions\DtoCastException;
 
 /**
+ * Data Transfer Object for Transfer Recipient requests from Paystack.
+ *
+ * This DTO encapsulates the data associated with a transfer recipient created or managed via the Paystack API.
+ *
  * @author @Intuneteq
- *
  * @version 1.0
- *
- * @since 30-06-2024
- *
- * Data Transfer Object for Transfer Recipient requests from paystack
+ * @since 15-10-2024
+ * @package Intune\LaravelPaystack\Dtos
  */
 class TransferRecipientDto implements IDtoFactory
 {
    /**
     * TransferRecipientDto constructor.
     *
-    * @param  string  $code  The recipient code.
-    * @param  string  $name  The recipient name.
-    * @param  string  $created_at  The creation date.
+    * @param string $code       The unique code associated with the transfer recipient.
+    * @param string $name       The name of the transfer recipient.
+    * @param string $created_at  The timestamp indicating when the transfer recipient was created.
     */
-   public function __construct(
+   private function __construct(
       private string $code,
       private string $name,
       private string $created_at
@@ -30,6 +31,8 @@ class TransferRecipientDto implements IDtoFactory
 
    /**
     * Get the recipient code.
+    *
+    * @return string The unique code of the transfer recipient.
     */
    public function getCode(): string
    {
@@ -38,6 +41,8 @@ class TransferRecipientDto implements IDtoFactory
 
    /**
     * Get the recipient name.
+    *
+    * @return string The name of the transfer recipient.
     */
    public function getName(): string
    {
@@ -45,7 +50,9 @@ class TransferRecipientDto implements IDtoFactory
    }
 
    /**
-    * Get the creation date.
+    * Get the creation date of the recipient.
+    *
+    * @return string The timestamp when the recipient was created.
     */
    public function getCreatedAt(): string
    {
@@ -53,7 +60,9 @@ class TransferRecipientDto implements IDtoFactory
    }
 
    /**
-    * Convert the DTO to an array.
+    * Convert the DTO properties to an associative array.
+    *
+    * @return array Associative array representation of the DTO's properties.
     */
    public function toArray(): array
    {
@@ -65,11 +74,12 @@ class TransferRecipientDto implements IDtoFactory
    }
 
    /**
-    * Create a new instance of TransferRecipientDto from array data.
+    * Create a new instance of TransferRecipientDto from an array of data.
     *
-    * @param  array  $data  The array containing transfer recipient data.
+    * @param array $data The array containing transfer recipient data.
     *
-    * @throws ServerErrorException If required fields are missing in $data.
+    * @return self
+    * @throws DtoCastException If required fields (recipient_code, name, createdAt) are missing.
     */
    public static function create(array $data): self
    {

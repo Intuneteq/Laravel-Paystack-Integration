@@ -30,7 +30,7 @@ class CustomerDto implements IDtoFactory
     * @param  string  $createdAt  Date of creation
     * @param  Collection  $subscriptions  The Customer's subscriptions
     */
-   public function __construct(
+   private function __construct(
       private string $id,
       private string $email,
       private string $code,

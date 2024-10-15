@@ -32,7 +32,7 @@ class InvoiceDto implements IDtoFactory
     ) {}
 
     /**
-     * Get the invoice amount.
+     * Get the invoice amount in naira.
      */
     public function getAmount(): int
     {
