@@ -3,6 +3,7 @@
     "description": "Utility API Layer for Paytstack Integration",
     "type": "library",
     "license": "MIT",
+    "version": "0.0.1",
     "autoload": {
         "psr-4": {
             "Intune\\Paystack\\": "src/"
@@ -13,7 +14,7 @@
             "name": "Intuneteq",
             "email": "tobiolanitori@gmail.com"
         }
-    ],
+    ],``
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.9",
