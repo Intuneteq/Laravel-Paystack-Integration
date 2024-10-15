@@ -7,6 +7,9 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: write # Allow the workflow to push to the repository
+
 jobs:
   version:
     runs-on: ubuntu-latest
