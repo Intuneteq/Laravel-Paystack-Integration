@@ -1,6 +1,6 @@
 <?php
 
-namespace YourVendor\MyPackage;
+namespace Intune\LaravelPaystack\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Intune\LaravelPaystack\PaystackService;
