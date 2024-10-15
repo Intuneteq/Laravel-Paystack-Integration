@@ -98,17 +98,14 @@ class PaystackService implements PaystackInterface
     *
     * @see https://paystack.com/docs/api/transaction/#initialize
     */
-   public function initializeTransaction(string $email, int $amount, bool $isSubscription): TransactionInitializationDto
+   public function initializeSubscriptionTransaction(string $email, int $amount): TransactionInitializationDto
    {
       $payload = [
          'email' => $email,
          'amount' => $amount,
          'callback_url' => $this->redirect_url,
+         'plan' => $this->premium_plan_code,
       ];
-
-      if ($isSubscription) {
-         $payload['plan'] = $this->premium_plan_code;
-      }
 
       $response = Http::withHeaders([
          'Authorization' => 'Bearer ' . $this->secret_key,
@@ -174,7 +171,7 @@ class PaystackService implements PaystackInterface
     *
     * @see https://paystack.com/docs/api/subscription#create
     */
-   public function createSubscription(string $customer_id)
+   public function createSubscription(string $customer_id): SubscriptionDto
    {
       $payload = [
          'customer' => $customer_id,
@@ -224,7 +221,7 @@ class PaystackService implements PaystackInterface
 
          throw new Exception('Error Managing Subscription');
       }
-      
+
       return $response['data']['link'];
    }
 
@@ -453,7 +450,7 @@ class PaystackService implements PaystackInterface
     *
     * @throws \Exception
     */
-   public function initiateTransfer(string $amount, string $recipient_code, string $reference)
+   public function initiateTransfer(string $amount, string $recipient_code, string $reference): TransferDto
    {
       $payload = [
          'source' => 'balance',
