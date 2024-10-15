@@ -1,0 +1,48 @@
+name: Auto Versioning
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [created]
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2" # Use your preferred PHP version
+
+      - name: Get current version
+        id: get_version
+        run: |
+          version=$(grep '"version":' composer.json | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "::set-output name=current_version::$version"
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          IFS='.' read -r major minor patch <<< "${{ steps.get_version.outputs.current_version }}"
+          new_version="${major}.${minor}.$((patch + 1))"
+          echo "Bumping version to $new_version"
+          jq --arg new_version "$new_version" '.version = $new_version' composer.json > temp.json && mv temp.json composer.json
+          echo "::set-output name=new_version::$new_version"
+
+      - name: Commit version bump
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add composer.json
+          git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}" || echo "No changes to commit"
+
+      - name: Create Git Tag
+        run: |
+          git tag "${{ steps.bump_version.outputs.new_version }}"
+          git push origin "${{ steps.bump_version.outputs.new_version }}"
