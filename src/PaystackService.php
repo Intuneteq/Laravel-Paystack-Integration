@@ -7,11 +7,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Intune\LaravelPaystack\Contracts\PaystackInterface;
+use Intune\LaravelPaystack\Contracts\TransactionInitPayloadDto;
 use Intune\LaravelPaystack\Dtos\BankDto;
 use Intune\LaravelPaystack\Dtos\CustomerDto;
 use Intune\LaravelPaystack\Dtos\SubscriptionDto;
 use Intune\LaravelPaystack\Dtos\TransactionInitializationDto;
-use Intune\LaravelPaystack\Dtos\TransactionInitPayloadDto;
 use Intune\LaravelPaystack\Dtos\TransferDto;
 use Intune\LaravelPaystack\Dtos\TransferRecipientDto;
 use Intune\LaravelPaystack\Dtos\UserDto;
@@ -170,13 +170,13 @@ class PaystackService implements PaystackInterface
    }
 
    /**
-    * Initialize a purchase transaction on Paystack.
+    * Initialize a transaction on Paystack.
     *
     * @param TransactionInitPayloadDto $data The transaction initialization payload data transfer object
     * @return TransactionInitializationDto The transaction initialization data transfer object
     * @throws Exception If an error occurs during the API request
     */
-   public function initializePurchaseTransaction(TransactionInitPayloadDto $data): TransactionInitializationDto
+   public function initializeTransaction(TransactionInitPayloadDto $data): TransactionInitializationDto
    {
       $payload = array_merge($data->toArray(), [
          'callback_url' => $this->redirect_url,

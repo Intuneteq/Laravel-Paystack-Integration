@@ -9,7 +9,7 @@ namespace Intune\LaravelPaystack\Contracts;
  * from raw data, typically received from external API calls to paystack. The DTO provides
  * a structured and formatted representation of the data for internal usage.
  * 
- * @package Intune\LaravelPaystack\Dtos
+ * @package Intune\LaravelPaystack\Contracts
  */
 interface IDtoFactory
 {

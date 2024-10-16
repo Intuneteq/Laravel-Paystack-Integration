@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use Intune\LaravelPaystack\Dtos\CustomerDto;
 use Intune\LaravelPaystack\Dtos\SubscriptionDto;
 use Intune\LaravelPaystack\Dtos\TransactionInitializationDto;
-use Intune\LaravelPaystack\Dtos\TransactionInitPayloadDto;
 use Intune\LaravelPaystack\Dtos\TransferDto;
 use Intune\LaravelPaystack\Dtos\TransferRecipientDto;
 use Intune\LaravelPaystack\Dtos\UserDto;
@@ -45,7 +44,7 @@ interface PaystackInterface
     * 
     * @return TransactionInitializationDto
     */
-   public function initializePurchaseTransaction(TransactionInitPayloadDto $data): TransactionInitializationDto;
+   public function initializeTransaction(TransactionInitPayloadDto $data): TransactionInitializationDto;
 
    /**
     * Initialize a subscription transaction.

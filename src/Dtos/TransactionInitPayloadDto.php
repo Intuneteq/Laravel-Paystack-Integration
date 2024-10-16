@@ -1,6 +1,6 @@
 <?php
 
-namespace Intune\LaravelPaystack\Dtos;
+namespace Intune\LaravelPaystack\Contracts;
 
 use Intune\LaravelPaystack\Contracts\IDtoFactory;
 use Intune\LaravelPaystack\Exceptions\DtoCastException;
