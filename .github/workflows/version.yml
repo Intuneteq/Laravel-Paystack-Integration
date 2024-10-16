@@ -30,26 +30,33 @@ jobs:
           latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
           if [ -z "$latest_tag" ]; then
             echo "No tags found, starting at version v1.0.0"
-            echo "::set-output name=latest_tag::v1.0.0"
+            echo "latest_tag=v1.0.0" >> $GITHUB_ENV
           else
             echo "Latest tag found: $latest_tag"
-            echo "::set-output name=latest_tag::$latest_tag"
+            echo "latest_tag=$latest_tag" >> $GITHUB_ENV
           fi
 
       - name: Parse the latest version and increment the patch
         id: bump_version
         run: |
-          version=${{ steps.get_latest_tag.outputs.latest_tag }}
-          IFS='.' read -r major minor patch <<< "${version#v}" # Remove 'v' from the tag if it exists
-          if [ -z "$patch" ]; then patch=0; fi # Ensure patch is not empty
+          version=${{ env.latest_tag }}
+          # Extract the major, minor, and patch components
+          version=${version#v}  # Remove 'v' if present
+          IFS='.' read -r major minor patch <<< "$version"
+          
+          # Ensure patch is a number before incrementing
+          if [ -z "$patch" ]; then
+            patch=0
+          fi
+          
           new_patch=$((patch + 1))
           new_version="v$major.$minor.$new_patch"
           echo "New version: $new_version"
-          echo "::set-output name=new_version::$new_version"
+          echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: Update composer.json with the new version
         run: |
-          new_version=${{ steps.bump_version.outputs.new_version }}
+          new_version=${{ env.new_version }}
           jq --arg new_version "${new_version#v}" '.version = $new_version' composer.json > temp.json && mv temp.json composer.json
           echo "Composer.json updated with version $new_version"
 
@@ -58,12 +65,12 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add composer.json
-          git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}" || echo "No changes to commit"
+          git commit -m "Bump version to ${{ env.new_version }}" || echo "No changes to commit"
 
       - name: Tag new version
         run: |
-          git tag ${{ steps.bump_version.outputs.new_version }}
-          git push origin ${{ steps.bump_version.outputs.new_version }}
+          git tag ${{ env.new_version }}
+          git push origin ${{ env.new_version }}
 
       - name: Push code changes
         run: |
