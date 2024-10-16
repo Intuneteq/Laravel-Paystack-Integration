@@ -3,6 +3,7 @@
 namespace Intune\LaravelPaystack\Dtos;
 
 use Illuminate\Support\Collection;
+use Intune\LaravelPaystack\Contracts\IDtoFactory;
 use Intune\LaravelPaystack\Enums\SubscriptionStatusEnum;
 use Intune\LaravelPaystack\Exceptions\DtoCastException;
 

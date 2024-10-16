@@ -2,7 +2,7 @@
 
 namespace Intune\LaravelPaystack\Dtos;
 
-use Intune\LaravelPaystack\Dtos\IDtoFactory;
+use Intune\LaravelPaystack\Contracts\IDtoFactory;
 use Intune\LaravelPaystack\Exceptions\DtoCastException;
 
 /**

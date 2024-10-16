@@ -1,6 +1,6 @@
 <?php
 
-namespace Intune\LaravelPaystack\Dtos;
+namespace Intune\LaravelPaystack\Contracts;
 
 /**
  * Interface for a Data Transfer Object (DTO) Factory.
