@@ -65,6 +65,11 @@ class TransactionInitPayloadDto implements IDtoFactory
       return $this->amount;
    }
 
+   public function getAmountInNaira(): string
+   {
+      return $this->amount / 100;
+   }
+
    /**
     * Get the metadata associated with the transaction.
     * 

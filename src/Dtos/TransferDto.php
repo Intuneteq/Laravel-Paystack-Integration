@@ -28,10 +28,7 @@ class TransferDto implements IDtoFactory
         private string $amount,
         private string $code,
         private string $created_at
-    ) {
-        // Convert amount from smallest currency unit to standard currency unit (e.g., kobo to Naira)
-        $this->amount = (string) ((int) $this->amount / 100);
-    }
+    ) {}
 
     /**
      * Get the amount of the transfer.
@@ -41,6 +38,11 @@ class TransferDto implements IDtoFactory
     public function getAmount(): string
     {
         return $this->amount;
+    }
+
+    public function getAmountInNaira(): int
+    {
+        return $this->amount / 100;
     }
 
     /**

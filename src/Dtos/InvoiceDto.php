@@ -33,9 +33,17 @@ class InvoiceDto implements IDtoFactory
     ) {}
 
     /**
-     * Get the invoice amount in naira.
+     * Get the invoice amount.
      */
     public function getAmount(): int
+    {
+        return $this->amount / 100;
+    }
+
+    /**
+     * Get the invoice amount in naira.
+     */
+    public function getAmountInNaira(): int
     {
         return $this->amount / 100; // convert to naira
     }
@@ -95,7 +103,7 @@ class InvoiceDto implements IDtoFactory
     public static function create(array $data): self
     {
         if (! isset($data['amount'], $data['status'], $data['createdAt'])) {
-         throw new DtoCastException(self::class);
+            throw new DtoCastException(self::class);
         }
 
         return new self(
