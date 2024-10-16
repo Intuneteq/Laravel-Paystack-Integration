@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-  release:
-    types: [created]
 
 permissions:
-  contents: write 
+  contents: write
 
 jobs:
   version:
@@ -21,34 +19,38 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2" # Use your preferred PHP version
+          php-version: "8.2"
 
-      - name: Get current version
-        id: get_version
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Get latest tag
+        id: get_latest_tag
         run: |
-          version=$(grep '"version":' composer.json | sed -E 's/.*"([^"]+)".*/\1/')
-          echo "::set-output name=current_version::$version"
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          if [ -z "$latest_tag" ]; then
+            echo "No tags found, starting at version 1.0.0"
+            echo "::set-output name=latest_tag::1.0.0"
+          else
+            echo "Latest tag found: $latest_tag"
+            echo "::set-output name=latest_tag::$latest_tag"
+          fi
 
-      - name: Bump version
+      - name: Parse the latest version and increment the patch
         id: bump_version
         run: |
-          IFS='.' read -r major minor patch <<< "${{ steps.get_version.outputs.current_version }}"
-          new_version="${major}.${minor}.$((patch + 1))"
-          echo "Bumping version to $new_version"
-          jq --arg new_version "$new_version" '.version = $new_version' composer.json > temp.json && mv temp.json composer.json
+          version=${{ steps.get_latest_tag.outputs.latest_tag }}
+          IFS='.' read -r major minor patch <<< "${version#v}" # Remove 'v' from the tag if it exists
+          new_patch=$((patch + 1))
+          new_version="v$major.$minor.$new_patch"
+          echo "New version: $new_version"
           echo "::set-output name=new_version::$new_version"
 
-      - name: Check for existing tag
-        id: check_tag
+      - name: Update composer.json with the new version
         run: |
-          if git tag -l | grep -q "${{ steps.bump_version.outputs.new_version }}"; then
-            echo "Tag ${{ steps.bump_version.outputs.new_version }} already exists. Incrementing again."
-            IFS='.' read -r major minor patch <<< "${{ steps.bump_version.outputs.new_version }}"
-            new_version="${major}.${minor}.$((patch + 1))"
-            echo "New version after increment: $new_version"
-            jq --arg new_version "$new_version" '.version = $new_version' composer.json > temp.json && mv temp.json composer.json
-            echo "::set-output name=new_version::$new_version"
-          fi
+          new_version=${{ steps.bump_version.outputs.new_version }}
+          jq --arg new_version "${new_version#v}" '.version = $new_version' composer.json > temp.json && mv temp.json composer.json
+          echo "Composer.json updated with version $new_version"
 
       - name: Commit version bump
         run: |
@@ -57,7 +59,11 @@ jobs:
           git add composer.json
           git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}" || echo "No changes to commit"
 
-      - name: Create Git Tag
+      - name: Tag new version
         run: |
-          git tag "${{ steps.bump_version.outputs.new_version }}"
-          git push origin "${{ steps.bump_version.outputs.new_version }}"
+          git tag ${{ steps.bump_version.outputs.new_version }}
+          git push origin ${{ steps.bump_version.outputs.new_version }}
+
+      - name: Push code changes
+        run: |
+          git push origin main
