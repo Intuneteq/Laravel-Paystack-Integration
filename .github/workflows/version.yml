@@ -75,3 +75,13 @@ jobs:
       - name: Push code changes
         run: |
           git push origin main
+
+      - name: Create or update GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
+        with:
+          tag_name: ${{ env.new_version }}  # Use the new version as the tag
+          release_name: Release ${{ env.new_version }}  # Name of the release
+          draft: false  # Publish the release immediately
+          prerelease: false  # Mark as a stable release
