@@ -29,8 +29,8 @@ jobs:
         run: |
           latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
           if [ -z "$latest_tag" ]; then
-            echo "No tags found, starting at version 1.0.0"
-            echo "::set-output name=latest_tag::1.0.0"
+            echo "No tags found, starting at version v1.0.0"
+            echo "::set-output name=latest_tag::v1.0.0"
           else
             echo "Latest tag found: $latest_tag"
             echo "::set-output name=latest_tag::$latest_tag"
@@ -41,6 +41,7 @@ jobs:
         run: |
           version=${{ steps.get_latest_tag.outputs.latest_tag }}
           IFS='.' read -r major minor patch <<< "${version#v}" # Remove 'v' from the tag if it exists
+          if [ -z "$patch" ]; then patch=0; fi # Ensure patch is not empty
           new_patch=$((patch + 1))
           new_version="v$major.$minor.$new_patch"
           echo "New version: $new_version"
