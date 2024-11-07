@@ -12,6 +12,7 @@ use Intune\LaravelPaystack\Dtos\CustomerDto;
 use Intune\LaravelPaystack\Dtos\SubscriptionDto;
 use Intune\LaravelPaystack\Dtos\TransactionInitializationDto;
 use Intune\LaravelPaystack\Dtos\TransactionInitPayloadDto;
+use Intune\LaravelPaystack\Dtos\TransactionVerificationDto;
 use Intune\LaravelPaystack\Dtos\TransferDto;
 use Intune\LaravelPaystack\Dtos\TransferRecipientDto;
 use Intune\LaravelPaystack\Dtos\UserDto;
@@ -199,6 +200,31 @@ class PaystackService implements PaystackInterface
       }
 
       return TransactionInitializationDto::create($response['data']);
+   }
+
+   public function verifyTransaction(string $reference)
+   {
+      $url = "{$this->base_url}/transaction/verify/{$reference}";
+
+      $response = Http::withHeaders([
+         'Authorization' => 'Bearer ' . $this->secret_key,
+      ])->get($url);
+
+      if ($response->failed()) {
+         Log::critical('Error initializing purchase transaction', [
+            'status' => $response->status(),
+            'message' => $response->reason(),
+            'body' => $response->body(),
+         ]);
+
+         if ($response->status() === 400) {
+            throw new Exception($response->reason());
+         }
+
+         throw new Exception('Error Verifying Paystack Transaction');
+      }
+
+      return TransactionVerificationDto::create($response['data']);
    }
 
    /**
