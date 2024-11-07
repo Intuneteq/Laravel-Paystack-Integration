@@ -1,10 +1,10 @@
 <?php
 
-namespace Dtos;
+namespace Intune\LaravelPaystack\Dtos;
 
 use Intune\LaravelPaystack\Contracts\IDtoFactory;
-use Intune\LaravelPaystack\Dtos\CustomerDto;
 use Intune\LaravelPaystack\Exceptions\DtoCastException;
+use Intune\LaravelPaystack\Dtos\CustomerDto;
 
 class ChargeSuccessDto implements IDtoFactory
 {
