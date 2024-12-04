@@ -7,11 +7,11 @@ use Intune\LaravelPaystack\Exceptions\DtoCastException;
 
 /**
  * Data Transfer Object for initializing a transaction payload.
- * 
+ *
  * This DTO is used to encapsulate the data required for initializing
  * a Paystack transaction. It implements the Factory Design Pattern to
  * create instances from an array of data.
- * 
+ *
  * @package Intune\LaravelPaystack\Dtos
  */
 class TransactionInitPayloadDto implements IDtoFactory
@@ -32,22 +32,28 @@ class TransactionInitPayloadDto implements IDtoFactory
    private mixed $metadata;
 
    /**
+    * @var mixed $reference Generated reference id
+    */
+   private ?string $reference;
+
+   /**
     * Private constructor to enforce the use of the factory method.
-    * 
+    *
     * @param string $email
     * @param string $amount
     * @param mixed $metadata
     */
-   private function __construct(string $email, string $amount, mixed $metadata)
+   private function __construct(string $email, string $amount, mixed $metadata, ?string $reference)
    {
       $this->email = $email;
       $this->amount = $amount;
       $this->metadata = $metadata;
+      $this->reference = $reference;
    }
 
    /**
     * Get the email associated with the transaction.
-    * 
+    *
     * @return string Customer's email.
     */
    public function getEmail(): string
@@ -57,7 +63,7 @@ class TransactionInitPayloadDto implements IDtoFactory
 
    /**
     * Get the transaction amount.
-    * 
+    *
     * @return string Transaction amount.
     */
    public function getAmount(): string
@@ -72,7 +78,7 @@ class TransactionInitPayloadDto implements IDtoFactory
 
    /**
     * Get the metadata associated with the transaction.
-    * 
+    *
     * @return mixed Metadata for the transaction.
     */
    public function getMetaData(): mixed
@@ -81,8 +87,18 @@ class TransactionInitPayloadDto implements IDtoFactory
    }
 
    /**
+    * Get the Reference id associated with the transaction.
+    *
+    * @return string|null
+    */
+   public function getReference(): ?string
+   {
+      return $this->reference;
+   }
+
+   /**
     * Convert the DTO properties into an array format.
-    * 
+    *
     * @return array Associative array of the DTO's properties.
     */
    public function toArray(): array
@@ -91,16 +107,17 @@ class TransactionInitPayloadDto implements IDtoFactory
          'email' => $this->email,
          'amount' => $this->amount,
          'metadata' => $this->metadata,
+         'reference' => $this->reference,
       ];
    }
 
    /**
     * Create an instance of the DTO from an array of data.
-    * 
-    * @param array $data Input data for the DTO.
-    * 
+    *
+    * @param array $data Input data for the DTO (email, amount, reference).
+    *
     * @return self
-    * 
+    *
     * @throws DtoCastException If required fields (email, amount) are missing.
     */
    public static function create(array $data): self
@@ -113,6 +130,6 @@ class TransactionInitPayloadDto implements IDtoFactory
          $data['metadata'] = [];
       }
 
-      return new self($data['email'], $data['amount'], $data['metadata']);
+      return new self($data['email'], $data['amount'], $data['metadata'], $data['reference']);
    }
 }

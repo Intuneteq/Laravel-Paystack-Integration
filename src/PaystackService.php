@@ -211,7 +211,7 @@ class PaystackService implements PaystackInterface
       ])->get($url);
 
       if ($response->failed()) {
-         Log::critical('Error initializing purchase transaction', [
+         Log::critical('Verifying transaction', [
             'status' => $response->status(),
             'message' => $response->reason(),
             'body' => $response->body(),
